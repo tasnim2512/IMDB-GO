@@ -1,0 +1,17 @@
+[server]
+port=3000
+
+[session]
+lifetime = 1
+idletime = 20
+
+[database]
+host=127.0.0.1
+port=5432
+dbname=blog_cms
+username=postgres
+password=password
+sslmode=disable
+
+[usermgm]
+url="127.0.0.1:4000"
