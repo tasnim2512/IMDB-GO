@@ -24,8 +24,8 @@ import (
 //go:embed assets
 var assetFiles embed.FS
 
-//go:embed migrations
-var migrationFiles embed.FS
+// //go:embed migrations
+// var migrationFiles embed.FS
 
 var sessionManager *scs.SessionManager
 
@@ -48,13 +48,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	goose.SetBaseFS(migrationFiles)
+	// goose.SetBaseFS(migrationFiles)
 	if err := goose.SetDialect("postgres"); err != nil {
 		log.Fatalln(err)
 	}
-	if err := goose.Up(postGresStorage.DB.DB, "migrations"); err != nil {
-		log.Fatalln(err)
-	}
+	// if err := goose.Up(postGresStorage.DB.DB, "migrations"); err != nil {
+	// 	log.Fatalln(err)
+	// }
 	lt := config.GetDuration("session.lifetime")
 	it := config.GetDuration("session.idletime")
 	sessionManager = scs.New()

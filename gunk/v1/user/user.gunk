@@ -1,17 +1,18 @@
-package adminpb
+package userpb
 
-type adminService interface { 
+type userService interface {
 	Register(RegisterRequest) RegisterResponse
 	Login(LoginRequest) LoginResponse
 }
 
-type Admin struct {
+type User struct {
 	FirstName string `pb:"1"`
 	LastName  string `pb:"2"`
-	UserName  string `pb:"3"`
-	Email     string `pb:"4"`
-	IsAdmin   bool   `pb:"5"`
-	Role      string `pb:"6"`
+	Email     string `pb:"3"`
+	UserName  string `pb:"4"`
+	Role      string `pb:"5"`
+	IsAdmin   bool   `pb:"6"`
+	IsActive  bool   `pb:"7"`
 }
 
 type RegisterRequest struct {
@@ -19,12 +20,11 @@ type RegisterRequest struct {
 	LastName  string `pb:"2"`
 	UserName  string `pb:"3"`
 	Email     string `pb:"4"`
-	IsAdmin   bool   `pb:"5"`
-	Password  string `pb:"6"`
+	Password  string `pb:"7"`
 }
 
 type RegisterResponse struct {
-	Admin Admin `pb:"1"`
+	User User `pb:"1"`
 }
 
 type LoginRequest struct {
@@ -33,5 +33,5 @@ type LoginRequest struct {
 }
 
 type LoginResponse struct {
-	Admin Admin `pb:"1"`
+	User User `pb:"1"`
 }
