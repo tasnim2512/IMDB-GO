@@ -30,3 +30,22 @@ func (s PostgresStorage) AddGenre(genre storage.Genre) (*storage.Genre, error) {
 	return &genre, nil
 }
 
+const EditGenreQuery = `
+	UPDATE genres SET
+	name=:name
+	WHERE id=:id AND deleted_at IS NULL
+	RETURNING *;
+	`
+
+func (s PostgresStorage) EditGenre(u storage.Genre) (*storage.Genre, error) {
+	stmt, err := s.DB.PrepareNamed(EditGenreQuery)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := stmt.Get(&u, u); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	
+	return &u, nil
+}

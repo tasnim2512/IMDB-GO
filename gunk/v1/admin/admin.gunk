@@ -26,7 +26,8 @@ type EditGenre struct {
 	Name string `pb:"2"`
 }
 type EditGenreRequest struct {
-	Name string `pb:"1"`
+	ID   int    `pb:"1"`
+	Name string `pb:"2"`
 }
 type EditGenreResponse struct {
 	EditGenre EditGenre `pb:"1"`
@@ -37,7 +38,8 @@ type DeleteGenre struct {
 	Name string `pb:"2"`
 }
 type DeleteGenreRequest struct {
-	Name string `pb:"1"`
+	ID   int    `pb:"1"`
+	Name string `pb:"2"`
 }
 type DeleteGenreResponse struct {
 	DeleteGenre DeleteGenre `pb:"1"`
