@@ -18,6 +18,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
 	"github.com/spf13/viper"
+	"google.golang.org/grpc"
 	// "google.golang.org/grpc"
 )
 
@@ -76,7 +77,13 @@ func main() {
 		log.Fatalf("%#v", err)
 	}
 
-	chi := handler.NewHandler(sessionManager, decoder, postGresStorage, staticFiles, templateFiles)
+	urmgmUrl := config.GetString("usermgm.url")
+	usermgmConn, err := grpc.Dial(urmgmUrl, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("%#v", err)
+	}
+
+	chi := handler.NewHandler(sessionManager, decoder, usermgmConn, staticFiles, templateFiles)
 	nosurfHandler := nosurf.New(chi)
 	p := config.GetString("server.port")
 

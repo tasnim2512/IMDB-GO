@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func  (h Handler) HOME(w http.ResponseWriter, r *http.Request) {
+func  (h Handler) Home(w http.ResponseWriter, r *http.Request) {
 	t := h.Templates.Lookup("home.html")
 	if t == nil {
 		log.Println("unable to lookup home template")

@@ -39,21 +39,17 @@ func (s PostgresStorage) UserRegistration(a storage.User) (*storage.User, error)
 }
 
 const GetUserByUsernameQuery = `
- RETURNING *;
+ SELECT * from users WHERE username=$1 AND Deleted_at IS NULL;
 `
 
-func (s PostgresStorage) GetUserByUsername(a storage.User) (*storage.User, error) {
-	stmt, err := s.DB.PrepareNamed(GetUserByUsernameQuery)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := stmt.Get(&a, a); err != nil {
+func (s PostgresStorage) GetUserByUsername(username string) (*storage.User, error) {
+	var user storage.User
+	if err := s.DB.Get(&user, GetUserByUsernameQuery, username); err != nil {
 		return nil, err
 	}
-	if a.ID == 0 {
-		log.Println("unable to insert user")
-		return nil, fmt.Errorf("unable to insert user")
+
+	if user.ID == 0 {
+		return nil, fmt.Errorf("unable to get user")
 	}
-	return &a, nil
+	return &user, nil
 }

@@ -39,6 +39,7 @@ func (s *Svc) Register(ctx context.Context, r *userpb.RegisterRequest) (*userpb.
 	}
 	return &userpb.RegisterResponse{
 		User: &userpb.User{
+			ID:        int32(a.ID),
 			FirstName: a.FirstName,
 			LastName:  a.LastName,
 			Email:     a.Email,
@@ -66,6 +67,7 @@ func (s *Svc) Login(ctx context.Context, r *userpb.LoginRequest) (*userpb.LoginR
 	}
 	return &userpb.LoginResponse{
 		User: &userpb.User{
+			ID:        int32(ls.ID),
 			FirstName: ls.FirstName,
 			LastName:  ls.LastName,
 			Email:     ls.Email,
@@ -74,5 +76,5 @@ func (s *Svc) Login(ctx context.Context, r *userpb.LoginRequest) (*userpb.LoginR
 			IsAdmin:   false,
 			IsActive:  false,
 		},
-	},nil
+	}, nil
 }

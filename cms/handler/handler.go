@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	userpb "practice/IMDB/gunk/v1/user"
 	"strconv"
 	"strings"
 	"text/template"
@@ -14,15 +15,17 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-playground/form"
+	"google.golang.org/grpc"
 )
 
-type dbStorage interface {
+type usermgmService struct {
+	userpb.UserServiceClient
 }
 
 type Handler struct {
 	sessionManager *scs.SessionManager
 	decoder        *form.Decoder
-	storage        dbStorage
+	usermgmSvc     usermgmService
 	Templates      *template.Template
 	staticFiles    fs.FS
 	templateFiles  fs.FS
@@ -61,11 +64,11 @@ func (h Handler) Error(w http.ResponseWriter, error string, code int) {
 	}
 }
 
-func NewHandler(sm *scs.SessionManager, formDecoder *form.Decoder, storage dbStorage, staticFiles, templateFiles fs.FS) *chi.Mux {
+func NewHandler(sm *scs.SessionManager, formDecoder *form.Decoder, usermgmConn *grpc.ClientConn, staticFiles, templateFiles fs.FS) *chi.Mux {
 	h := &Handler{
 		sessionManager: sm,
 		decoder:        formDecoder,
-		storage:        storage,
+		usermgmSvc:     usermgmService{userpb.NewUserServiceClient(usermgmConn)},
 		staticFiles:    staticFiles,
 		templateFiles:  templateFiles,
 	}
@@ -78,13 +81,14 @@ func NewHandler(sm *scs.SessionManager, formDecoder *form.Decoder, storage dbSto
 	r.Use(middleware.Recoverer)
 	r.Use(Method)
 
-	r.Get("/", h.HOME)
-	// r.Get("/registration", h.CreateAdmin)
-
-	// r.Post("/admin/store", h.StoreAdmin)
-
-	r.Get("/login", h.Login)
-	r.Post("/login", h.LoginPostHandler)
+	r.Group(func(r chi.Router) {
+		r.Use(sm.LoadAndSave)
+		r.Get("/", h.Home)
+		r.Get("/registration", h.UserRegistration)
+		r.Post("/registration", h.UserRegistrationPost)
+		r.Get("/login", h.Login)
+		r.Post("/login", h.LoginPostHandler)
+	})
 
 	r.Handle("/static/*", http.StripPrefix("/static", http.FileServer(http.FS(h.staticFiles))))
 
@@ -196,7 +200,7 @@ func (h *Handler) ParseTemplates() error {
 		},
 	}).Funcs(sprig.FuncMap())
 
-	tmpl := template.Must(templates.ParseFS(h.templateFiles, "*/*.html", "*.html"))
+	tmpl := template.Must(templates.ParseFS(h.templateFiles, "*/*/*.html", "*/*.html", "*.html"))
 	if tmpl == nil {
 		log.Fatalln("unable to parse templates")
 	}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+  <title>Registration</title>
+</head>
+<body class="flex flex-wrap justify-center py-16">
+  <div class="w-full flex justify-center mb-4">
+    <img class="w-24" src="/static/images/imdb.png" alt="IMDB">
+  </div>
+  <form class="shadow-md p-10 bg-gray-50 border border-gray-300 rounded-md" action="/registration" method="Post">
+    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+    <div class="py-2">   
+      <label class="w-full font-semibold" for="first_name">First Name: </label>
+      <input class="border border-gray-400 rounded-md w-full" type="text" id="first_name" name="FirstName" value="{{.User.FirstName}}">
+      {{with ( index .FormError "FirstName") }}
+        <p class="text-red-500 ">{{.}}</p>
+      {{end}}
+    </div>
+    
+    <div class="py-2">   
+      <label class="w-full font-semibold" for="last_name">Last Name: </label>
+      <input class="border border-gray-400 rounded-md w-full" type="text" id="last_name" name="LastName" value="{{.User.LastName}}">
+      {{with ( index .FormError "LastName") }}
+        <p class="text-red-500 ">{{.}}</p>
+      {{end}}
+    </div>
+    
+    <div class="py-2">
+      <label class="w-full font-semibold" for="email">Email: </label>
+      <input class="border border-gray-400 rounded-md w-full" type="email" name="Email" value="{{.User.Email}}">
+      {{with ( index .FormError "Email") }}
+        <p class="text-red-500 ">{{.}}</p>
+      {{end}}
+    </div> 
+    
+    <div class="py-2">
+      <label class="w-full font-semibold" for="username">Username: </label>
+      <input class="border border-gray-400 rounded-md w-full" type="text" id="username" name="UserName" value="{{.User.UserName}}">
+      {{with ( index .FormError "UserName") }}
+        <p class="text-red-500 ">{{.}}</p>
+      {{end}}
+    </div> 
+    
+      <div class="py-2">
+        <label class="w-full font-semibold" for="password">Password: </label>
+        <input class="border border-gray-400 rounded-md w-full" type="password" id="password" name="Password" value="">
+        {{with ( index .FormError "Password") }}
+          <p class="text-red-500 ">{{.}}</p>
+        {{end}}
+      </div>
+     
+    <button class="w-full border border-gray-300 rounded-md bg-yellow-400 py-2 mt-4 font-normal" type="submit">
+      Register
+    </button>
+  </form>
+</body>
+</html>
