@@ -53,50 +53,42 @@ func (h Handler) UserRegistration(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (h Handler) UserRegistrationPost(w http.ResponseWriter, r *http.Request) {
+func (h Handler) UserRegistrationPost(w http.ResponseWriter, r *http.Request)  {
 	if err := r.ParseForm(); err != nil {
 		log.Println(err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
 	form := UserRegistrationForm{}
-	user := RegisterUser{}
-
-	err := h.decoder.Decode(&user, r.PostForm)
-	if err != nil {
+	ru := RegisterUser{}
+	if err := h.decoder.Decode(&ru, r.PostForm); err != nil {
 		log.Println(err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
-	form.User = user
-	if err := user.Validate(); err != nil {
-		formErr := make(map[string]error)
+
+	form.User = ru
+	if err := ru.Validate(); err != nil {
 		if vErr, ok := err.(validation.Errors); ok {
 			for key, val := range vErr {
-				formErr[strings.Title(key)] = val
+				form.FormError[strings.Title(key)] = val
 			}
 		}
-		form.FormError = formErr
-		form.CSRFToken = nosurf.Token(r)
 		h.parseRegisterTemplate(w, form)
 		return
 	}
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "internal server error", http.StatusInternalServerError)
-		return
-	}
 
-	_, err = h.usermgmSvc.Register(r.Context(), &userpb.RegisterRequest{
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-		UserName:  user.UserName,
-		Email:     user.Email,
-		Password:  user.Password,
+	_, err := h.usermgmSvc.Register(r.Context(), &userpb.RegisterRequest{
+		FirstName: ru.FirstName,
+		LastName:  ru.LastName,
+		UserName:  ru.UserName,
+		Email:     ru.Email,
+		Password:  ru.Password,
 	})
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
 	}
 
 	http.Redirect(w, r, "/login", http.StatusSeeOther)

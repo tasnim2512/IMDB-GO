@@ -48,6 +48,14 @@ type Login struct {
 	UserName string `db:"username"`
 	Password string `db:"password"`
 }
+
+type Genre struct {
+	ID   int    `form:"-" db:"id"`
+	Name string `db:"name"`
+	CreatedAt    time.Time    `db:"created_at"`
+	UpdatedAt    time.Time    `db:"updated_at"`
+	DeletedAt    sql.NullTime `db:"deleted_at"`
+}
 type Class struct {
 	ID        int          `form:"-" db:"id"`
 	ClassName string       `db:"class_name"`
@@ -114,6 +122,14 @@ func (l Login) Validate() error {
 		),
 		validation.Field(&l.Password,
 			validation.Required.Error("the password field is required"),
+		),
+	)
+}
+
+func (g Genre) Validate() error {
+	return validation.ValidateStruct(&g,
+		validation.Field(&g.Name,
+			validation.Required.Error("the name field is required"),
 		),
 	)
 }

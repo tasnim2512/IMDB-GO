@@ -1,0 +1,77 @@
+package adminpb
+
+type adminService interface {
+	AddGenre(AddGenreRequest) AddGenreResponse
+	EditGenre(EditGenreRequest) EditGenreResponse
+	DeleteGenre(EditGenreRequest) DeleteGenreResponse
+
+	AddMovie(AddMovieRequest) AddMovieResponse
+	EditMovie(EditMovieRequest) EditMovieResponse
+	DeleteMovie(EditMovieRequest) DeleteMovieResponse
+}
+
+type AddGenre struct {
+	ID   int    `pb:"1"`
+	Name string `pb:"2"`
+}
+type AddGenreRequest struct {
+	Name string `pb:"1"`
+}
+type AddGenreResponse struct {
+	AddGenre AddGenre `pb:"1"`
+}
+
+type EditGenre struct {
+	ID   int    `pb:"1"`
+	Name string `pb:"2"`
+}
+type EditGenreRequest struct {
+	Name string `pb:"1"`
+}
+type EditGenreResponse struct {
+	EditGenre EditGenre `pb:"1"`
+}
+
+type DeleteGenre struct {
+	ID   int    `pb:"1"`
+	Name string `pb:"2"`
+}
+type DeleteGenreRequest struct {
+	Name string `pb:"1"`
+}
+type DeleteGenreResponse struct {
+	DeleteGenre DeleteGenre `pb:"1"`
+}
+
+type AddMovie struct {
+	ID   int    `pb:"1"`
+	Name string `pb:"2"`
+}
+type AddMovieRequest struct {
+	Name string `pb:"1"`
+}
+type AddMovieResponse struct {
+	AddMovie AddMovie `pb:"1"`
+}
+
+type EditMovie struct {
+	ID   int    `pb:"1"`
+	Name string `pb:"2"`
+}
+type EditMovieRequest struct {
+	Name string `pb:"1"`
+}
+type EditMovieResponse struct {
+	EditMovie EditMovie `pb:"1"`
+}
+
+type DeleteMovie struct {
+	ID   int    `pb:"1"`
+	Name string `pb:"2"`
+}
+type DeleteMovieRequest struct {
+	Name string `pb:"1"`
+}
+type DeleteMovieResponse struct {
+	DeleteMovie DeleteMovie `pb:"1"`
+}

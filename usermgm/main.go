@@ -5,14 +5,17 @@ import (
 	"fmt"
 	"log"
 	"net"
+	adminpb "practice/IMDB/gunk/v1/admin"
 	userpb "practice/IMDB/gunk/v1/user"
+	ag "practice/IMDB/usermgm/core/admin"
 	ca "practice/IMDB/usermgm/core/user"
 	"practice/IMDB/usermgm/service/user"
+	"practice/IMDB/usermgm/service/admin"
 	"practice/IMDB/usermgm/storage/postgres"
 	"strings"
 
-	"github.com/pressly/goose/v3"
 	_ "github.com/lib/pq"
+	"github.com/pressly/goose/v3"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -56,6 +59,10 @@ func main() {
 	userCore := ca.NewCoreUser(postGresStorage)
 	userSvc := user.NewUserSvc(userCore)
 	userpb.RegisterUserServiceServer(grpcServer, userSvc)
+
+	adminCore := ag.NewCoreAdmin (postGresStorage)
+	adminSvc := admin.NewAdminSvc(adminCore)
+	adminpb.RegisterAdminServiceServer(grpcServer, adminSvc)
 
 	reflection.Register(grpcServer)
 	fmt.Println("usermgm server running at ", lis.Addr())
