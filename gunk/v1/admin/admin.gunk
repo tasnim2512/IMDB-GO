@@ -7,7 +7,7 @@ type adminService interface {
 
 	AddMovie(AddMovieRequest) AddMovieResponse
 	EditMovie(EditMovieRequest) EditMovieResponse
-	DeleteMovie(EditMovieRequest) DeleteMovieResponse
+	DeleteMovie(DeleteMovieRequest) DeleteMovieResponse
 }
 
 type AddGenre struct {
@@ -41,7 +41,7 @@ type DeleteGenreRequest struct {
 	ID   int    `pb:"1"`
 }
 type DeleteGenreResponse struct {
-	ID   int    `pb:"1"`
+	Error   string    `pb:"1"`
 }
 
 type AddMovie struct {

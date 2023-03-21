@@ -70,3 +70,17 @@ func (s PostgresStorage) DeleteGenre(id string) error {
 	}
 	return nil
 }
+const GetGenreByNameQuery = `
+SELECT id, name FROM genres WHERE name= $1 AND deleted_at IS NULL;
+`
+
+func (s PostgresStorage) GetGenreByName(name string) (*storage.Genre, error) {
+	var genres storage.Genre
+	if err := s.DB.Get(&genres, GetGenreByNameQuery, name); err != nil {
+		return nil, err
+	}
+	if genres.ID == 0 {
+		return nil, fmt.Errorf("unable to get genre")
+	}
+	return &genres, nil
+}

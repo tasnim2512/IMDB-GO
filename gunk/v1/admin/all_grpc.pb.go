@@ -23,7 +23,7 @@ type AdminServiceClient interface {
 	DeleteGenre(ctx context.Context, in *DeleteGenreRequest, opts ...grpc.CallOption) (*DeleteGenreResponse, error)
 	AddMovie(ctx context.Context, in *AddMovieRequest, opts ...grpc.CallOption) (*AddMovieResponse, error)
 	EditMovie(ctx context.Context, in *EditMovieRequest, opts ...grpc.CallOption) (*EditMovieResponse, error)
-	DeleteMovie(ctx context.Context, in *EditMovieRequest, opts ...grpc.CallOption) (*DeleteMovieResponse, error)
+	DeleteMovie(ctx context.Context, in *DeleteMovieRequest, opts ...grpc.CallOption) (*DeleteMovieResponse, error)
 }
 
 type adminServiceClient struct {
@@ -79,7 +79,7 @@ func (c *adminServiceClient) EditMovie(ctx context.Context, in *EditMovieRequest
 	return out, nil
 }
 
-func (c *adminServiceClient) DeleteMovie(ctx context.Context, in *EditMovieRequest, opts ...grpc.CallOption) (*DeleteMovieResponse, error) {
+func (c *adminServiceClient) DeleteMovie(ctx context.Context, in *DeleteMovieRequest, opts ...grpc.CallOption) (*DeleteMovieResponse, error) {
 	out := new(DeleteMovieResponse)
 	err := c.cc.Invoke(ctx, "/adminpb.adminService/DeleteMovie", in, out, opts...)
 	if err != nil {
@@ -97,7 +97,7 @@ type AdminServiceServer interface {
 	DeleteGenre(context.Context, *DeleteGenreRequest) (*DeleteGenreResponse, error)
 	AddMovie(context.Context, *AddMovieRequest) (*AddMovieResponse, error)
 	EditMovie(context.Context, *EditMovieRequest) (*EditMovieResponse, error)
-	DeleteMovie(context.Context, *EditMovieRequest) (*DeleteMovieResponse, error)
+	DeleteMovie(context.Context, *DeleteMovieRequest) (*DeleteMovieResponse, error)
 	mustEmbedUnimplementedAdminServiceServer()
 }
 
@@ -120,7 +120,7 @@ func (UnimplementedAdminServiceServer) AddMovie(context.Context, *AddMovieReques
 func (UnimplementedAdminServiceServer) EditMovie(context.Context, *EditMovieRequest) (*EditMovieResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EditMovie not implemented")
 }
-func (UnimplementedAdminServiceServer) DeleteMovie(context.Context, *EditMovieRequest) (*DeleteMovieResponse, error) {
+func (UnimplementedAdminServiceServer) DeleteMovie(context.Context, *DeleteMovieRequest) (*DeleteMovieResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMovie not implemented")
 }
 func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
@@ -227,7 +227,7 @@ func _AdminService_EditMovie_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _AdminService_DeleteMovie_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EditMovieRequest)
+	in := new(DeleteMovieRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -239,7 +239,7 @@ func _AdminService_DeleteMovie_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: "/adminpb.adminService/DeleteMovie",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).DeleteMovie(ctx, req.(*EditMovieRequest))
+		return srv.(AdminServiceServer).DeleteMovie(ctx, req.(*DeleteMovieRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -5,6 +5,7 @@ import "practice/IMDB/usermgm/storage"
 type AdminStore interface {
 	AddGenre(storage.Genre) (*storage.Genre, error)
 	EditGenre(storage.Genre) (*storage.Genre, error)
+	GetGenreByName(string) (*storage.Genre, error)
 	DeleteGenre(id string)  error
 }
 
