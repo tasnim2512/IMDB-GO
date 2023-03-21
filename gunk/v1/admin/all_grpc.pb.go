@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type AdminServiceClient interface {
 	AddGenre(ctx context.Context, in *AddGenreRequest, opts ...grpc.CallOption) (*AddGenreResponse, error)
 	EditGenre(ctx context.Context, in *EditGenreRequest, opts ...grpc.CallOption) (*EditGenreResponse, error)
-	DeleteGenre(ctx context.Context, in *EditGenreRequest, opts ...grpc.CallOption) (*DeleteGenreResponse, error)
+	DeleteGenre(ctx context.Context, in *DeleteGenreRequest, opts ...grpc.CallOption) (*DeleteGenreResponse, error)
 	AddMovie(ctx context.Context, in *AddMovieRequest, opts ...grpc.CallOption) (*AddMovieResponse, error)
 	EditMovie(ctx context.Context, in *EditMovieRequest, opts ...grpc.CallOption) (*EditMovieResponse, error)
 	DeleteMovie(ctx context.Context, in *EditMovieRequest, opts ...grpc.CallOption) (*DeleteMovieResponse, error)
@@ -52,7 +52,7 @@ func (c *adminServiceClient) EditGenre(ctx context.Context, in *EditGenreRequest
 	return out, nil
 }
 
-func (c *adminServiceClient) DeleteGenre(ctx context.Context, in *EditGenreRequest, opts ...grpc.CallOption) (*DeleteGenreResponse, error) {
+func (c *adminServiceClient) DeleteGenre(ctx context.Context, in *DeleteGenreRequest, opts ...grpc.CallOption) (*DeleteGenreResponse, error) {
 	out := new(DeleteGenreResponse)
 	err := c.cc.Invoke(ctx, "/adminpb.adminService/DeleteGenre", in, out, opts...)
 	if err != nil {
@@ -94,7 +94,7 @@ func (c *adminServiceClient) DeleteMovie(ctx context.Context, in *EditMovieReque
 type AdminServiceServer interface {
 	AddGenre(context.Context, *AddGenreRequest) (*AddGenreResponse, error)
 	EditGenre(context.Context, *EditGenreRequest) (*EditGenreResponse, error)
-	DeleteGenre(context.Context, *EditGenreRequest) (*DeleteGenreResponse, error)
+	DeleteGenre(context.Context, *DeleteGenreRequest) (*DeleteGenreResponse, error)
 	AddMovie(context.Context, *AddMovieRequest) (*AddMovieResponse, error)
 	EditMovie(context.Context, *EditMovieRequest) (*EditMovieResponse, error)
 	DeleteMovie(context.Context, *EditMovieRequest) (*DeleteMovieResponse, error)
@@ -111,7 +111,7 @@ func (UnimplementedAdminServiceServer) AddGenre(context.Context, *AddGenreReques
 func (UnimplementedAdminServiceServer) EditGenre(context.Context, *EditGenreRequest) (*EditGenreResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EditGenre not implemented")
 }
-func (UnimplementedAdminServiceServer) DeleteGenre(context.Context, *EditGenreRequest) (*DeleteGenreResponse, error) {
+func (UnimplementedAdminServiceServer) DeleteGenre(context.Context, *DeleteGenreRequest) (*DeleteGenreResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteGenre not implemented")
 }
 func (UnimplementedAdminServiceServer) AddMovie(context.Context, *AddMovieRequest) (*AddMovieResponse, error) {
@@ -173,7 +173,7 @@ func _AdminService_EditGenre_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _AdminService_DeleteGenre_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EditGenreRequest)
+	in := new(DeleteGenreRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -185,7 +185,7 @@ func _AdminService_DeleteGenre_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: "/adminpb.adminService/DeleteGenre",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).DeleteGenre(ctx, req.(*EditGenreRequest))
+		return srv.(AdminServiceServer).DeleteGenre(ctx, req.(*DeleteGenreRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

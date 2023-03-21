@@ -49,3 +49,24 @@ func (s PostgresStorage) EditGenre(u storage.Genre) (*storage.Genre, error) {
 	
 	return &u, nil
 }
+
+const DeleteGenreQuery = `
+UPDATE genres SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1 AND deleted_at IS NULL 
+RETURNING id;
+`
+
+func (s PostgresStorage) DeleteGenre(id string) error {
+	res, err := s.DB.Exec(DeleteGenreQuery, id)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	row, err := res.RowsAffected()
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	if row >= 0 {
+		fmt.Printf("unable to delete genre")
+	}
+	return nil
+}

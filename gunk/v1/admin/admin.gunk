@@ -3,7 +3,7 @@ package adminpb
 type adminService interface {
 	AddGenre(AddGenreRequest) AddGenreResponse
 	EditGenre(EditGenreRequest) EditGenreResponse
-	DeleteGenre(EditGenreRequest) DeleteGenreResponse
+	DeleteGenre(DeleteGenreRequest) DeleteGenreResponse
 
 	AddMovie(AddMovieRequest) AddMovieResponse
 	EditMovie(EditMovieRequest) EditMovieResponse
@@ -39,10 +39,9 @@ type DeleteGenre struct {
 }
 type DeleteGenreRequest struct {
 	ID   int    `pb:"1"`
-	Name string `pb:"2"`
 }
 type DeleteGenreResponse struct {
-	DeleteGenre DeleteGenre `pb:"1"`
+	ID   int    `pb:"1"`
 }
 
 type AddMovie struct {

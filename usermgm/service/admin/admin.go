@@ -8,7 +8,7 @@ import (
 type CoreAdmin interface {
 	AddGenre(storage.Genre) (*storage.Genre, error)
 	EditGenre(storage.Genre) (*storage.Genre, error)
-	
+	DeleteGenre(string) error
 }
 
 type Svc struct {
