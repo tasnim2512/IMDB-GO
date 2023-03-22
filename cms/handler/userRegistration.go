@@ -53,7 +53,7 @@ func (h Handler) UserRegistration(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (h Handler) UserRegistrationPost(w http.ResponseWriter, r *http.Request)  {
+func (h Handler) UserRegistrationPost(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		log.Println(err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)

@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"practice/IMDB/usermgm/storage"
 
 	"google.golang.org/grpc/codes"
@@ -10,7 +9,6 @@ import (
 
 func (s Svc) AddGenre(g storage.Genre) (*storage.Genre, error) {
 	alreadyExists, _ := s.GenreAlreadyExists(g.Name)
-	fmt.Println("#############",alreadyExists)
 
 	if alreadyExists {
 		return nil, status.Error(codes.AlreadyExists, "name already exists")
@@ -40,12 +38,10 @@ func (s Svc) DeleteGenre(g string) error {
 
 func (s *Svc) GenreAlreadyExists(value string) (bool, error) {
 	newGenre, err := s.store.GetGenreByName(value)
-	fmt.Println("@@@@@@@@@@@@@@",newGenre)
 	if err != nil {
 		return false, err
 	}
 	if newGenre != nil {
-		fmt.Println(newGenre)
 		return true, nil
 	}
 	return false, nil

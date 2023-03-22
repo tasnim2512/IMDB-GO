@@ -60,6 +60,6 @@ func (s *Svc) DeleteGenre(ctx context.Context, r *adminpb.DeleteGenreRequest) (*
 	_ = s.core.DeleteGenre(gID)
 
 	return &adminpb.DeleteGenreResponse{
-		Error: "This is deleted",
+		Error: "Deleted",
 	}, nil
 }

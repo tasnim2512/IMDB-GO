@@ -38,18 +38,23 @@ type DeleteGenre struct {
 	Name string `pb:"2"`
 }
 type DeleteGenreRequest struct {
-	ID   int    `pb:"1"`
+	ID int `pb:"1"`
 }
 type DeleteGenreResponse struct {
-	Error   string    `pb:"1"`
+	Error string `pb:"1"`
 }
 
 type AddMovie struct {
-	ID   int    `pb:"1"`
-	Name string `pb:"2"`
+	ID        int    `pb:"1"`
+	Name      string `pb:"2"`
+	StoryLine string `pb:"3"`
+	Genres    []int  `pb:"4"`
 }
+
 type AddMovieRequest struct {
-	Name string `pb:"1"`
+	Name      string `pb:"1"`
+	StoryLine string `pb:"2"`
+	Genres    []int  `pb:"3"`
 }
 type AddMovieResponse struct {
 	AddMovie AddMovie `pb:"1"`

@@ -9,6 +9,7 @@ type CoreAdmin interface {
 	AddGenre(storage.Genre) (*storage.Genre, error)
 	EditGenre(storage.Genre) (*storage.Genre, error)
 	DeleteGenre(string) error
+	AddMovie(storage.Movie) (*storage.Movie, error)
 }
 
 type Svc struct {
