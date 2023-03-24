@@ -9,7 +9,10 @@ type AdminStore interface {
 	GetGenreByName(string) (*storage.Genre, error)
 	GetGenreByID(id int) (*storage.Genre, error)
 	AddMovie(storage.Movie) (*storage.Movie, error)
+	EditMovie(storage.Movie) (*storage.Movie, error)
+	DeleteMovie(id string) error
 	AddMovieGenre(storage.MovieGenre) (*storage.MovieGenre, error)
+	EditMovieGenre(storage.MovieGenre) (*storage.MovieGenre, error)
 }
 
 type Svc struct {

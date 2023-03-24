@@ -61,23 +61,27 @@ type AddMovieResponse struct {
 }
 
 type EditMovie struct {
-	ID   int    `pb:"1"`
-	Name string `pb:"2"`
+	ID        int    `pb:"1"`
+	Name      string `pb:"2"`
+	StoryLine string `pb:"3"`
+	Genres    []int  `pb:"4"`
 }
 type EditMovieRequest struct {
-	Name string `pb:"1"`
+	ID        int    `pb:"1"`
+	Name      string `pb:"2"`
+	StoryLine string `pb:"3"`
+	Genres    []int  `pb:"4"`
 }
 type EditMovieResponse struct {
 	EditMovie EditMovie `pb:"1"`
 }
 
 type DeleteMovie struct {
-	ID   int    `pb:"1"`
-	Name string `pb:"2"`
+	ID int `pb:"1"`
 }
 type DeleteMovieRequest struct {
-	Name string `pb:"1"`
+	ID int `pb:"1"`
 }
 type DeleteMovieResponse struct {
-	DeleteMovie DeleteMovie `pb:"1"`
+	Error string `pb:"1"`
 }

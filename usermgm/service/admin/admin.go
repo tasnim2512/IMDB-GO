@@ -10,6 +10,9 @@ type CoreAdmin interface {
 	EditGenre(storage.Genre) (*storage.Genre, error)
 	DeleteGenre(string) error
 	AddMovie(storage.Movie) (*storage.Movie, error)
+	EditMovie(storage.Movie) (*storage.Movie, error)
+	DeleteMovie(id string) error
+
 }
 
 type Svc struct {

@@ -9,14 +9,13 @@ import (
 )
 
 func (s Svc) AddMovie(m storage.Movie) (*storage.Movie, error) {
-
 	newMovie, err := s.store.AddMovie(m)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, val := range m.Genre {
-		GenreExists, _ := s.GenreExists( int(val))
+		GenreExists, _ := s.GenreExists(int(val))
 		if !GenreExists {
 			return nil, status.Error(codes.AlreadyExists, "genre does not exists")
 		}
@@ -27,6 +26,34 @@ func (s Svc) AddMovie(m storage.Movie) (*storage.Movie, error) {
 		fmt.Println(movieGenre)
 	}
 	return newMovie, nil
+}
+
+func (s Svc) EditMovie(m storage.Movie) (*storage.Movie, error) {
+	newMovie, err := s.store.EditMovie(m)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, val := range m.Genre {
+		// GenreExists, _ := s.GenreExists(int(val))
+		// if !GenreExists {
+		// 	return nil, status.Error(codes.AlreadyExists, "genre does not exists")
+		// }
+		movieGenre, _ := s.store.EditMovieGenre(storage.MovieGenre{
+			MovieID: newMovie.ID,
+			GenreID: int(val),
+		})
+		fmt.Println(movieGenre)
+	}
+	return newMovie, nil
+}
+
+func (s Svc) DeleteMovie(m string) error {
+	err := s.store.DeleteMovie(m)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *Svc) GenreExists(value int) (bool, error) {

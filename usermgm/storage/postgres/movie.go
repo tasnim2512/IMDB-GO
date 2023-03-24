@@ -30,27 +30,45 @@ func (s PostgresStorage) AddMovie(movie storage.Movie) (*storage.Movie, error) {
 	}
 	return &ddd, nil
 }
-const addMovieGenreQuery = `
-INSERT INTO movie_genre(
-	movie_id,
-	genre_id
-) VALUES(
-	:movie_id,
-	:genre_id
-) RETURNING *;
-`
 
-func (s PostgresStorage) AddMovieGenre(movieGenre storage.MovieGenre) (*storage.MovieGenre, error) {
-	stmt, err := s.DB.PrepareNamed(addMovieGenreQuery)
+const EditMovieQuery = `
+	UPDATE movies SET
+	name=:name,
+	storyline=:storyline
+	WHERE id=:id AND deleted_at IS NULL
+	RETURNING *;
+	`
+
+func (s PostgresStorage) EditMovie(m storage.Movie) (*storage.Movie, error) {
+	stmt, err := s.DB.PrepareNamed(EditMovieQuery)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	if err := stmt.Get(&movieGenre, movieGenre); err != nil {
+	if err := stmt.Get(&m, m); err != nil {
+		log.Println(err)
 		return nil, err
 	}
-	if movieGenre.ID == 0 {
-		return nil, fmt.Errorf("unable to insert movieGenre")
+
+	return &m, nil
+}
+
+const DeleteMovieQuery = `
+UPDATE movies SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1 AND deleted_at IS NULL 
+RETURNING id;
+`
+
+func (s PostgresStorage) DeleteMovie(id string) error {
+	res, err := s.DB.Exec(DeleteMovieQuery, id)
+	if err != nil {
+		log.Println(err)
+		return err
 	}
-	return &movieGenre, nil
+	row, err := res.RowsAffected()
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	if row >= 0 {
+		fmt.Printf("unable to delete movie")
+	}
+	return nil
 }
