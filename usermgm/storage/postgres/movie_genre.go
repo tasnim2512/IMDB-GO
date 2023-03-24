@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"practice/IMDB/usermgm/storage"
@@ -31,12 +32,30 @@ func (s PostgresStorage) AddMovieGenre(movieGenre storage.MovieGenre) (*storage.
 	return &movieGenre, nil
 }
 
+const getMovieGenreQuery = `
+SELECT genre_id FROM movie_genre WHERE movie_id = $1 AND deleted_at IS NULL;;
+`
+
+func (s PostgresStorage) GetAllMovieGenreByMovieID(id int) ([]*storage.MovieGenre, error) {
+	var movie_genre []*storage.MovieGenre
+	if err := s.DB.Select(&movie_genre, getMovieGenreQuery, id); err != nil {
+
+		if err == sql.ErrNoRows {
+			return nil, storage.NotFound
+		}
+		return nil, err
+	}
+	return movie_genre, nil
+}
+
 const editMovieGenreQuery = `
-UPDATE movie_genre SET
-movie_id = :movie_id,
-genre_id = :genre_id
-WHERE id=:id AND deleted_at IS NULL
-RETURNING *;
+INSERT INTO movie_genre(
+	movie_id,
+	genre_id
+) VALUES(
+	:movie_id,
+	:genre_id
+) RETURNING *;
 `
 
 func (s PostgresStorage) EditMovieGenre(movieGenre storage.MovieGenre) (*storage.MovieGenre, error) {

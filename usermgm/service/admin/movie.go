@@ -2,7 +2,6 @@ package admin
 
 import (
 	"context"
-	"log"
 	adminpb "practice/IMDB/gunk/v1/admin"
 	"practice/IMDB/usermgm/storage"
 	"strconv"
@@ -40,6 +39,7 @@ func (s *Svc) EditMovie(ctx context.Context, r *adminpb.EditMovieRequest) (*admi
 		StoryLine: r.GetStoryLine(),
 		Genre:     r.Genres,
 	}
+	// log.Println("request", movie)
 	if err := movie.Validate(); err != nil {
 		return nil, err
 	}
@@ -56,6 +56,7 @@ func (s *Svc) EditMovie(ctx context.Context, r *adminpb.EditMovieRequest) (*admi
 			Genres:    am.Genre,
 		},
 	}, nil
+	
 }
 
 func (s *Svc) DeleteMovie(ctx context.Context, r *adminpb.DeleteMovieRequest) ( *adminpb.DeleteMovieResponse, error) {

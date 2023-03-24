@@ -91,7 +91,7 @@ const GetGenreByIdQuery = `
 SELECT * FROM genres WHERE id = $1 AND deleted_at IS NULL;
 `
 
-func (s PostgresStorage) GetGenreByID( id int) (*storage.Genre, error) {
+func (s PostgresStorage) GetGenreByID(id int) (*storage.Genre, error) {
 	var genres storage.Genre
 	if err := s.DB.Get(&genres, GetGenreByIdQuery, id); err != nil {
 		if err == sql.ErrNoRows {

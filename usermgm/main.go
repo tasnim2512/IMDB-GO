@@ -9,8 +9,8 @@ import (
 	userpb "practice/IMDB/gunk/v1/user"
 	ag "practice/IMDB/usermgm/core/admin"
 	ca "practice/IMDB/usermgm/core/user"
-	"practice/IMDB/usermgm/service/user"
 	"practice/IMDB/usermgm/service/admin"
+	"practice/IMDB/usermgm/service/user"
 	"practice/IMDB/usermgm/storage/postgres"
 	"strings"
 
@@ -60,7 +60,7 @@ func main() {
 	userSvc := user.NewUserSvc(userCore)
 	userpb.RegisterUserServiceServer(grpcServer, userSvc)
 
-	adminCore := ag.NewCoreAdmin (postGresStorage)
+	adminCore := ag.NewCoreAdmin(postGresStorage)
 	adminSvc := admin.NewAdminSvc(adminCore)
 	adminpb.RegisterAdminServiceServer(grpcServer, adminSvc)
 
