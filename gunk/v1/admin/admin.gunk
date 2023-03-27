@@ -8,6 +8,9 @@ type adminService interface {
 	AddMovie(AddMovieRequest) AddMovieResponse
 	EditMovie(EditMovieRequest) EditMovieResponse
 	DeleteMovie(DeleteMovieRequest) DeleteMovieResponse
+
+	AddMovieRating(AddMovieRatingRequest) AddMovieRatingResponse
+	EditMovieRating(EditMovieRatingRequest) EditMovieRatingResponse
 }
 
 type AddGenre struct {
@@ -84,4 +87,38 @@ type DeleteMovieRequest struct {
 }
 type DeleteMovieResponse struct {
 	Error string `pb:"1"`
+}
+
+type AddMovieRating struct {
+	ID      int `pb:"1"`
+	UserID  int `pb:"2"`
+	MovieID int `pb:"3"`
+	Rating  int `pb:"4"`
+}
+
+type AddMovieRatingRequest struct {
+	ID      int `pb:"1"`
+	UserID  int `pb:"2"`
+	MovieID int `pb:"3"`
+	Rating  int `pb:"4"`
+}
+
+type AddMovieRatingResponse struct {
+	AddMovieRating AddMovieRating `pb:"1"`
+}
+
+type EditMovieRating struct {
+	UserID  int `pb:"1"`
+	MovieID int `pb:"2"`
+	Rating  int `pb:"3"`
+}
+
+type EditMovieRatingRequest struct {
+	UserID  int `pb:"1"`
+	MovieID int `pb:"2"`
+	Rating  int `pb:"3"`
+}
+
+type EditMovieRatingResponse struct {
+	EditMovieRating EditMovieRating `pb:"1"`
 }

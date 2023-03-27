@@ -8,12 +8,15 @@ type AdminStore interface {
 	DeleteGenre(id string) error
 	GetGenreByName(string) (*storage.Genre, error)
 	GetGenreByID(id int) (*storage.Genre, error)
+	GetMovieByName(string) (*storage.Movie, error)
 	AddMovie(storage.Movie) (*storage.Movie, error)
 	EditMovie(storage.Movie) (*storage.Movie, error)
 	DeleteMovie(id string) error
 	AddMovieGenre(storage.MovieGenre) (*storage.MovieGenre, error)
 	EditMovieGenre(storage.MovieGenre) (*storage.MovieGenre, error)
 	GetAllMovieGenreByMovieID(id int) ([]*storage.MovieGenre, error)
+	AddMovieRating(storage.MovieRating) (*storage.MovieRating, error)
+	EditMovieRating(storage.MovieRating) (*storage.MovieRating, error)
 }
 
 type Svc struct {

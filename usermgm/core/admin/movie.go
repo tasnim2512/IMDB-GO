@@ -12,7 +12,10 @@ func (s Svc) AddMovie(m storage.Movie) (*storage.Movie, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	movieAlreadyExists, _ := s.MovieAlreadyExists(m.Name)
+	if movieAlreadyExists {
+		return nil, status.Error(codes.AlreadyExists, "movie already exists")
+	}
 	for _, val := range m.Genre {
 		GenreExists, _ := s.GenreExists(int(val))
 		if !GenreExists {
@@ -85,4 +88,33 @@ func (s *Svc) GenreExists(value int) (bool, error) {
 		return true, nil
 	}
 	return false, nil
+}
+
+func (s *Svc) MovieAlreadyExists(value string) (bool, error) {
+	newGenre, err := s.store.GetMovieByName(value)
+	if err != nil {
+		return false, err
+	}
+	if newGenre != nil {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (s Svc) AddMovieRating(rating storage.MovieRating) (*storage.MovieRating, error) {
+	newMovieRating, err := s.store.AddMovieRating(rating)
+	if err != nil {
+		return nil, err
+	}
+
+	return newMovieRating, nil
+}
+
+func (s Svc) EditMovieRating(rating storage.MovieRating) (*storage.MovieRating, error) {
+	newMovieRating, err := s.store.EditMovieRating(rating)
+	if err != nil {
+		return nil, err
+	}
+
+	return newMovieRating, nil
 }

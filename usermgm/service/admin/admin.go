@@ -12,7 +12,8 @@ type CoreAdmin interface {
 	AddMovie(storage.Movie) (*storage.Movie, error)
 	EditMovie(storage.Movie) (*storage.Movie, error)
 	DeleteMovie(id string) error
-
+	AddMovieRating(storage.MovieRating) (*storage.MovieRating, error)
+	EditMovieRating(storage.MovieRating) (*storage.MovieRating, error)
 }
 
 type Svc struct {

@@ -7,10 +7,11 @@ import (
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
+
 var (
-	// NotFound is returned when the requested resource does not exist.
 	NotFound = errors.New("not found")
 )
+
 type StudentFilter struct {
 	SearchTerm string
 	Offset     int
@@ -48,7 +49,7 @@ type Movie struct {
 	ID         int          `form:"-" db:"id"`
 	Name       string       `db:"name"`
 	StoryLine  string       `db:"storyline"`
-	Genre		[]int32   	`db:"genre"`
+	Genre      []int32      `db:"genre"`
 	ReleasedAt time.Time    `db:"released_at"`
 	UpdatedAt  time.Time    `db:"updated_at"`
 	DeletedAt  sql.NullTime `db:"deleted_at"`
@@ -58,6 +59,16 @@ type MovieGenre struct {
 	ID        int          `form:"-" db:"id"`
 	MovieID   int          `db:"movie_id"`
 	GenreID   int          `db:"genre_id"`
+	CreatedAt time.Time    `db:"created_at"`
+	UpdatedAt time.Time    `db:"updated_at"`
+	DeletedAt sql.NullTime `db:"deleted_at"`
+}
+
+type MovieRating struct {
+	ID        int          `form:"-" db:"id"`
+	MovieID   int          `db:"movie_id"`
+	UserID    int          `db:"user_id"`
+	Rating    int          `db:"rating"`
 	CreatedAt time.Time    `db:"created_at"`
 	UpdatedAt time.Time    `db:"updated_at"`
 	DeletedAt sql.NullTime `db:"deleted_at"`
@@ -101,6 +112,15 @@ func (m Movie) Validate() error {
 		),
 		validation.Field(&m.StoryLine,
 			validation.Required.Error("the storyline field is required"),
+		),
+	)
+}
+
+func (m MovieRating) Validate() error {
+	return validation.ValidateStruct(&m,
+		validation.Field(&m.Rating,
+			validation.Required.Error("the rating field is required"),
+			
 		),
 	)
 }

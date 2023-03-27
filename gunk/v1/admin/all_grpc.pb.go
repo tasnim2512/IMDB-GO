@@ -24,6 +24,8 @@ type AdminServiceClient interface {
 	AddMovie(ctx context.Context, in *AddMovieRequest, opts ...grpc.CallOption) (*AddMovieResponse, error)
 	EditMovie(ctx context.Context, in *EditMovieRequest, opts ...grpc.CallOption) (*EditMovieResponse, error)
 	DeleteMovie(ctx context.Context, in *DeleteMovieRequest, opts ...grpc.CallOption) (*DeleteMovieResponse, error)
+	AddMovieRating(ctx context.Context, in *AddMovieRatingRequest, opts ...grpc.CallOption) (*AddMovieRatingResponse, error)
+	EditMovieRating(ctx context.Context, in *EditMovieRatingRequest, opts ...grpc.CallOption) (*EditMovieRatingResponse, error)
 }
 
 type adminServiceClient struct {
@@ -88,6 +90,24 @@ func (c *adminServiceClient) DeleteMovie(ctx context.Context, in *DeleteMovieReq
 	return out, nil
 }
 
+func (c *adminServiceClient) AddMovieRating(ctx context.Context, in *AddMovieRatingRequest, opts ...grpc.CallOption) (*AddMovieRatingResponse, error) {
+	out := new(AddMovieRatingResponse)
+	err := c.cc.Invoke(ctx, "/adminpb.adminService/AddMovieRating", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) EditMovieRating(ctx context.Context, in *EditMovieRatingRequest, opts ...grpc.CallOption) (*EditMovieRatingResponse, error) {
+	out := new(EditMovieRatingResponse)
+	err := c.cc.Invoke(ctx, "/adminpb.adminService/EditMovieRating", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminServiceServer is the server API for AdminService service.
 // All implementations must embed UnimplementedAdminServiceServer
 // for forward compatibility
@@ -98,6 +118,8 @@ type AdminServiceServer interface {
 	AddMovie(context.Context, *AddMovieRequest) (*AddMovieResponse, error)
 	EditMovie(context.Context, *EditMovieRequest) (*EditMovieResponse, error)
 	DeleteMovie(context.Context, *DeleteMovieRequest) (*DeleteMovieResponse, error)
+	AddMovieRating(context.Context, *AddMovieRatingRequest) (*AddMovieRatingResponse, error)
+	EditMovieRating(context.Context, *EditMovieRatingRequest) (*EditMovieRatingResponse, error)
 	mustEmbedUnimplementedAdminServiceServer()
 }
 
@@ -122,6 +144,12 @@ func (UnimplementedAdminServiceServer) EditMovie(context.Context, *EditMovieRequ
 }
 func (UnimplementedAdminServiceServer) DeleteMovie(context.Context, *DeleteMovieRequest) (*DeleteMovieResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMovie not implemented")
+}
+func (UnimplementedAdminServiceServer) AddMovieRating(context.Context, *AddMovieRatingRequest) (*AddMovieRatingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddMovieRating not implemented")
+}
+func (UnimplementedAdminServiceServer) EditMovieRating(context.Context, *EditMovieRatingRequest) (*EditMovieRatingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EditMovieRating not implemented")
 }
 func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
 
@@ -244,6 +272,42 @@ func _AdminService_DeleteMovie_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_AddMovieRating_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddMovieRatingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).AddMovieRating(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/adminpb.adminService/AddMovieRating",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).AddMovieRating(ctx, req.(*AddMovieRatingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_EditMovieRating_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EditMovieRatingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).EditMovieRating(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/adminpb.adminService/EditMovieRating",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).EditMovieRating(ctx, req.(*EditMovieRatingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AdminService_ServiceDesc is the grpc.ServiceDesc for AdminService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -274,6 +338,14 @@ var AdminService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteMovie",
 			Handler:    _AdminService_DeleteMovie_Handler,
+		},
+		{
+			MethodName: "AddMovieRating",
+			Handler:    _AdminService_AddMovieRating_Handler,
+		},
+		{
+			MethodName: "EditMovieRating",
+			Handler:    _AdminService_EditMovieRating_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -72,3 +72,65 @@ func (s PostgresStorage) DeleteMovie(id string) error {
 	}
 	return nil
 }
+
+const GetMovieByIdQuery = `
+SELECT id, name FROM movies WHERE id = $1 AND deleted_at IS NULL;
+`
+
+func (s PostgresStorage) GetMovieByName(name string) (*storage.Movie, error) {
+	var movies storage.Movie
+	if err := s.DB.Get(&movies, GetMovieByIdQuery, name); err != nil {
+		return nil, err
+	}
+	if movies.ID == 0 {
+		return nil, fmt.Errorf("unable to get movie")
+	}
+	return &movies, nil
+}
+
+const movieRatingQuery = `
+INSERT INTO movie_rating(
+	movie_id,
+	user_id,
+	rating
+) VALUES(
+	:movie_id,
+	:user_id,
+	:rating
+) RETURNING *;
+`
+
+func (s PostgresStorage) AddMovieRating(rating storage.MovieRating) (*storage.MovieRating, error) {
+	stmt, err := s.DB.PrepareNamed(movieRatingQuery)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := stmt.Get(&rating, rating); err != nil {
+		return nil, err
+	}
+	if rating.ID == 0 {
+		log.Println("unable to rate movie")
+		return nil, fmt.Errorf("unable to rate movie")
+	}
+	return &rating, nil
+}
+
+const updateMovieRatingQuery = `
+UPDATE movie_rating SET
+	rating=:rating
+	WHERE movie_id=:movie_id AND user_id=:user_id AND deleted_at IS NULL
+	RETURNING *;`
+
+func (s PostgresStorage) EditMovieRating(rating storage.MovieRating) (*storage.MovieRating, error) {
+	stmt, err := s.DB.PrepareNamed(updateMovieRatingQuery)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := stmt.Get(&rating, rating); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return &rating, nil
+}

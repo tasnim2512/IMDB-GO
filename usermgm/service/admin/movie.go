@@ -34,7 +34,7 @@ func (s *Svc) AddMovie(ctx context.Context, r *adminpb.AddMovieRequest) (*adminp
 
 func (s *Svc) EditMovie(ctx context.Context, r *adminpb.EditMovieRequest) (*adminpb.EditMovieResponse, error) {
 	movie := storage.Movie{
-		ID: int(r.GetID()),
+		ID:        int(r.GetID()),
 		Name:      r.GetName(),
 		StoryLine: r.GetStoryLine(),
 		Genre:     r.Genres,
@@ -56,10 +56,10 @@ func (s *Svc) EditMovie(ctx context.Context, r *adminpb.EditMovieRequest) (*admi
 			Genres:    am.Genre,
 		},
 	}, nil
-	
+
 }
 
-func (s *Svc) DeleteMovie(ctx context.Context, r *adminpb.DeleteMovieRequest) ( *adminpb.DeleteMovieResponse, error) {
+func (s *Svc) DeleteMovie(ctx context.Context, r *adminpb.DeleteMovieRequest) (*adminpb.DeleteMovieResponse, error) {
 	movie := storage.Movie{
 		ID: int(r.GetID()),
 	}
@@ -69,5 +69,52 @@ func (s *Svc) DeleteMovie(ctx context.Context, r *adminpb.DeleteMovieRequest) ( 
 
 	return &adminpb.DeleteMovieResponse{
 		Error: "Deleted",
-	},nil
+	}, nil
+}
+
+func (s *Svc) AddMovieRating(ctx context.Context, r *adminpb.AddMovieRatingRequest) (*adminpb.AddMovieRatingResponse, error) {
+	movieRating := storage.MovieRating{
+		MovieID: int(r.GetMovieID()),
+		UserID:  int(r.GetUserID()),
+		Rating:  int(r.GetRating()),
+	}
+
+	if err := movieRating.Validate(); err != nil {
+		return nil, err
+	}
+
+	am, err := s.core.AddMovieRating(movieRating)
+	if err != nil {
+		return nil, err
+	}
+	return &adminpb.AddMovieRatingResponse{
+		AddMovieRating: &adminpb.AddMovieRating{
+			UserID:  int32(am.UserID),
+			MovieID: int32(am.MovieID),
+			Rating:  int32(am.Rating),
+		},
+	}, nil
+}
+func (s *Svc) EditMovieRating(ctx context.Context, r *adminpb.EditMovieRatingRequest) (*adminpb.EditMovieRatingResponse, error) {
+	movieRating := storage.MovieRating{
+		MovieID: int(r.GetMovieID()),
+		UserID:  int(r.GetUserID()),
+		Rating:  int(r.GetRating()),
+	}
+
+	if err := movieRating.Validate(); err != nil {
+		return nil, err
+	}
+
+	am, err := s.core.EditMovieRating(movieRating)
+	if err != nil {
+		return nil, err
+	}
+	return &adminpb.EditMovieRatingResponse{
+		EditMovieRating: &adminpb.EditMovieRating{
+			UserID:  int32(am.UserID),
+			MovieID: int32(am.MovieID),
+			Rating:  int32(am.Rating),
+		},
+	}, nil
 }
