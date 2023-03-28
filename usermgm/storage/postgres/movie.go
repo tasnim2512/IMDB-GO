@@ -119,7 +119,7 @@ func (s PostgresStorage) AddMovieRating(rating storage.MovieRating) (*storage.Mo
 const updateMovieRatingQuery = `
 UPDATE movie_rating SET
 	rating=:rating
-	WHERE movie_id=:movie_id AND user_id=:user_id AND deleted_at IS NULL
+	WHERE movie_id=:movie_id AND user_id=:user_id 
 	RETURNING *;`
 
 func (s PostgresStorage) EditMovieRating(rating storage.MovieRating) (*storage.MovieRating, error) {
@@ -133,4 +133,31 @@ func (s PostgresStorage) EditMovieRating(rating storage.MovieRating) (*storage.M
 	}
 
 	return &rating, nil
+}
+
+
+const addInWatchList = `
+INSERT INTO movie_watched(
+	movie_id,
+	user_id
+) VALUES(
+	:movie_id,
+	:user_id
+) RETURNING *;
+`
+
+func (s PostgresStorage) AddInWatchList(watched storage.MovieWatched) (*storage.MovieWatched, error) {
+	stmt, err := s.DB.PrepareNamed(addInWatchList)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := stmt.Get(&watched, watched); err != nil {
+		return nil, err
+	}
+	if watched.ID == 0 {
+		log.Println("unable to add movie in watch list")
+		return nil, fmt.Errorf("unable to add movie in watch list")
+	}
+	return &watched, nil
 }

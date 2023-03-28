@@ -65,13 +65,17 @@ type MovieGenre struct {
 }
 
 type MovieRating struct {
-	ID        int          `form:"-" db:"id"`
-	MovieID   int          `db:"movie_id"`
-	UserID    int          `db:"user_id"`
-	Rating    int          `db:"rating"`
-	CreatedAt time.Time    `db:"created_at"`
-	UpdatedAt time.Time    `db:"updated_at"`
-	DeletedAt sql.NullTime `db:"deleted_at"`
+	ID      int `form:"-" db:"id"`
+	MovieID int `db:"movie_id"`
+	UserID  int `db:"user_id"`
+	Rating  int `db:"rating"`
+}
+type MovieWatched struct {
+	ID        int       `form:"-" db:"id"`
+	MovieID   int32   `db:"movie_id"`
+	UserID    int       `db:"user_id"`
+	CreatedAt time.Time `db:"created_at"`
+	MovieIDs   []int32   
 }
 
 func (s User) Validate() error {
@@ -118,9 +122,25 @@ func (m Movie) Validate() error {
 
 func (m MovieRating) Validate() error {
 	return validation.ValidateStruct(&m,
+		validation.Field(&m.UserID,
+			validation.Required.Error("the UserID field is required"),
+		),
+		validation.Field(&m.MovieID,
+			validation.Required.Error("the MovieID field is required"),
+		),
 		validation.Field(&m.Rating,
 			validation.Required.Error("the rating field is required"),
-			
+		),
+	)
+}
+
+func (m MovieWatched) Validate() error {
+	return validation.ValidateStruct(&m,
+		validation.Field(&m.UserID,
+			validation.Required.Error("the UserID field is required"),
+		),
+		validation.Field(&m.MovieIDs,
+			validation.Required.Error("the MovieID field is required"),
 		),
 	)
 }

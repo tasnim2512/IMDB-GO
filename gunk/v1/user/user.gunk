@@ -3,6 +3,11 @@ package userpb
 type userService interface {
 	Register(RegisterRequest) RegisterResponse
 	Login(LoginRequest) LoginResponse
+	UpdateUser(UpdateUserRequest) UpdateUserResponse
+
+	AddMovieRating(AddMovieRatingRequest) AddMovieRatingResponse
+	EditMovieRating(EditMovieRatingRequest) EditMovieRatingResponse
+	AddInWatchList(AddInWatchListRequest) AddInWatchListResponse
 }
 
 type User struct {
@@ -28,6 +33,25 @@ type RegisterResponse struct {
 	User User `pb:"1"`
 }
 
+type UpdateUser struct {
+	FirstName string `pb:"1"`
+	LastName  string `pb:"2"`
+	Role      string `pb:"3"`
+	IsActive  bool   `pb:"4"`
+}
+
+type UpdateUserRequest struct {
+	ID        int    `pb:"1"`
+	FirstName string `pb:"2"`
+	LastName  string `pb:"3"`
+	Role      string `pb:"4"`
+	IsActive  bool   `pb:"5"`
+}
+
+type UpdateUserResponse struct {
+	UpdateUser UpdateUser `pb:"1"`
+}
+
 type LoginRequest struct {
 	UserName string `pb:"1"`
 	Password string `pb:"2"`
@@ -35,4 +59,50 @@ type LoginRequest struct {
 
 type LoginResponse struct {
 	User User `pb:"1"`
+}
+
+type AddMovieRating struct {
+	UserID  int `pb:"1"`
+	MovieID int `pb:"2"`
+	Rating  int `pb:"3"`
+}
+
+type AddMovieRatingRequest struct {
+	UserID  int `pb:"1"`
+	MovieID int `pb:"2"`
+	Rating  int `pb:"3"`
+}
+
+type AddMovieRatingResponse struct {
+	AddMovieRating AddMovieRating `pb:"1"`
+}
+
+type EditMovieRating struct {
+	UserID  int `pb:"1"`
+	MovieID int `pb:"2"`
+	Rating  int `pb:"3"`
+}
+
+type EditMovieRatingRequest struct {
+	UserID  int `pb:"1"`
+	MovieID int `pb:"2"`
+	Rating  int `pb:"3"`
+}
+
+type EditMovieRatingResponse struct {
+	EditMovieRating EditMovieRating `pb:"1"`
+}
+
+type AddInWatchList struct {
+	UserID  int   `pb:"1"`
+	MovieID int `pb:"2"`
+}
+
+type AddInWatchListRequest struct {
+	UserID  int   `pb:"1"`
+	MovieID []int `pb:"2"`
+}
+
+type AddInWatchListResponse struct {
+	AddInWatchList []AddInWatchList `pb:"1"`
 }

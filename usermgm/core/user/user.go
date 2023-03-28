@@ -10,6 +10,10 @@ import (
 type UserStore interface {
 	UserRegistration(storage.User) (*storage.User, error)
 	GetUserByUsername(string) (*storage.User, error)
+	UpdateUser(storage.User) (*storage.User, error)
+	AddMovieRating(storage.MovieRating) (*storage.MovieRating, error)
+	EditMovieRating(storage.MovieRating) (*storage.MovieRating, error)
+	AddInWatchList(storage.MovieWatched) (*storage.MovieWatched, error)
 }
 
 type Svc struct {
@@ -40,7 +44,7 @@ func (s Svc) Register(a storage.User) (*storage.User, error) {
 	return user, nil
 }
 
-func (s Svc) Login(l storage.Login) (*storage.User, error){
+func (s Svc) Login(l storage.Login) (*storage.User, error) {
 	u, err := s.store.GetUserByUsername(l.UserName)
 	if err != nil {
 		return nil, err
@@ -53,4 +57,16 @@ func (s Svc) Login(l storage.Login) (*storage.User, error){
 	l.Password = string(hashPass)
 
 	return u, nil
+}
+
+func (s Svc) UpdateUser(a storage.User) (*storage.User, error) {
+	user, err := s.store.UpdateUser(a)
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		log.Println("unable to register")
+	}
+	return user, nil
 }

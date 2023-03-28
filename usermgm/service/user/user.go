@@ -8,7 +8,11 @@ import (
 
 type UserStore interface {
 	Register(storage.User) (*storage.User, error)
+	UpdateUser(storage.User) (*storage.User, error)
 	Login(storage.Login) (*storage.User, error)
+	AddMovieRating(storage.MovieRating) (*storage.MovieRating, error)
+	EditMovieRating(storage.MovieRating) (*storage.MovieRating, error)
+	AddInWatchList(storage.MovieWatched) ([]*storage.MovieWatched, error)
 }
 
 type Svc struct {
@@ -77,4 +81,27 @@ func (s *Svc) Login(ctx context.Context, r *userpb.LoginRequest) (*userpb.LoginR
 			IsActive:  false,
 		},
 	}, nil
+}
+
+func (s *Svc) UpdateUser(ctx context.Context, r *userpb.UpdateUserRequest) (*userpb.UpdateUserResponse, error) {
+	user := storage.User{
+		ID: int(r.GetID()),
+		FirstName: r.GetFirstName(),
+		LastName:  r.GetLastName(),
+		Role:      r.GetRole(),
+		IsActive:  r.GetIsActive(),
+	}
+	a, err := s.core.UpdateUser(user)
+	if err != nil {
+		return nil, err
+	}
+	return &userpb.UpdateUserResponse{
+		UpdateUser: &userpb.UpdateUser{
+			FirstName: a.FirstName,
+			LastName:  a.LastName,
+			Role:      a.Role,
+			IsActive:  false,
+		},
+	}, nil
+
 }

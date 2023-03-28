@@ -53,3 +53,25 @@ func (s PostgresStorage) GetUserByUsername(username string) (*storage.User, erro
 	}
 	return &user, nil
 }
+
+const updateUserQuery = `
+	UPDATE users SET
+		first_name = COALESCE(NULLIF(:first_name, ''), first_name),
+		last_name = COALESCE(NULLIF(:last_name, ''), last_name),
+		is_active = :is_active,
+		role = COALESCE(NULLIF(:role, 'user'), role)
+	WHERE id = :id AND deleted_at IS NULL RETURNING *;
+	`
+
+func (s PostgresStorage) UpdateUser(u storage.User) (*storage.User, error) {
+	stmt, err := s.DB.PrepareNamed(updateUserQuery)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	if err := stmt.Get(&u, u); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return &u, nil
+}

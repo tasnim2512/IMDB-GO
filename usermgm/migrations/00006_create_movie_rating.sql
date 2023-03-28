@@ -5,11 +5,8 @@ CREATE TABLE IF NOT EXISTS movie_rating (
     movie_id BIGINT,
     user_id BIGINT,
     rating INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP DEFAULT NULL,
 
-    PRIMARY KEY(movie_id),
+    PRIMARY KEY(movie_id,user_id),
     CONSTRAINT fk_id
     FOREIGN KEY( movie_id)
 	REFERENCES movies (id) on delete SET NULL,

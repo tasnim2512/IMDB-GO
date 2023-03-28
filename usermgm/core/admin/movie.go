@@ -101,20 +101,3 @@ func (s *Svc) MovieAlreadyExists(value string) (bool, error) {
 	return false, nil
 }
 
-func (s Svc) AddMovieRating(rating storage.MovieRating) (*storage.MovieRating, error) {
-	newMovieRating, err := s.store.AddMovieRating(rating)
-	if err != nil {
-		return nil, err
-	}
-
-	return newMovieRating, nil
-}
-
-func (s Svc) EditMovieRating(rating storage.MovieRating) (*storage.MovieRating, error) {
-	newMovieRating, err := s.store.EditMovieRating(rating)
-	if err != nil {
-		return nil, err
-	}
-
-	return newMovieRating, nil
-}

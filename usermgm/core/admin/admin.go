@@ -15,8 +15,6 @@ type AdminStore interface {
 	AddMovieGenre(storage.MovieGenre) (*storage.MovieGenre, error)
 	EditMovieGenre(storage.MovieGenre) (*storage.MovieGenre, error)
 	GetAllMovieGenreByMovieID(id int) ([]*storage.MovieGenre, error)
-	AddMovieRating(storage.MovieRating) (*storage.MovieRating, error)
-	EditMovieRating(storage.MovieRating) (*storage.MovieRating, error)
 }
 
 type Svc struct {

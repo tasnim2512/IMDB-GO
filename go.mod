@@ -8,6 +8,7 @@ require (
 	github.com/go-chi/chi v1.5.4
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-playground/form v3.1.4+incompatible
+	github.com/google/go-cmp v0.5.9
 	github.com/justinas/nosurf v1.1.1
 	github.com/lib/pq v1.10.7
 	github.com/pressly/goose v2.7.0+incompatible

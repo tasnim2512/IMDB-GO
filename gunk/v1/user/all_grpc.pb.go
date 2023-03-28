@@ -20,6 +20,10 @@ const _ = grpc.SupportPackageIsVersion7
 type UserServiceClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
+	AddMovieRating(ctx context.Context, in *AddMovieRatingRequest, opts ...grpc.CallOption) (*AddMovieRatingResponse, error)
+	EditMovieRating(ctx context.Context, in *EditMovieRatingRequest, opts ...grpc.CallOption) (*EditMovieRatingResponse, error)
+	AddInWatchList(ctx context.Context, in *AddInWatchListRequest, opts ...grpc.CallOption) (*AddInWatchListResponse, error)
 }
 
 type userServiceClient struct {
@@ -48,12 +52,52 @@ func (c *userServiceClient) Login(ctx context.Context, in *LoginRequest, opts ..
 	return out, nil
 }
 
+func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
+	out := new(UpdateUserResponse)
+	err := c.cc.Invoke(ctx, "/userpb.userService/UpdateUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) AddMovieRating(ctx context.Context, in *AddMovieRatingRequest, opts ...grpc.CallOption) (*AddMovieRatingResponse, error) {
+	out := new(AddMovieRatingResponse)
+	err := c.cc.Invoke(ctx, "/userpb.userService/AddMovieRating", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) EditMovieRating(ctx context.Context, in *EditMovieRatingRequest, opts ...grpc.CallOption) (*EditMovieRatingResponse, error) {
+	out := new(EditMovieRatingResponse)
+	err := c.cc.Invoke(ctx, "/userpb.userService/EditMovieRating", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) AddInWatchList(ctx context.Context, in *AddInWatchListRequest, opts ...grpc.CallOption) (*AddInWatchListResponse, error) {
+	out := new(AddInWatchListResponse)
+	err := c.cc.Invoke(ctx, "/userpb.userService/AddInWatchList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	AddMovieRating(context.Context, *AddMovieRatingRequest) (*AddMovieRatingResponse, error)
+	EditMovieRating(context.Context, *EditMovieRatingRequest) (*EditMovieRatingResponse, error)
+	AddInWatchList(context.Context, *AddInWatchListRequest) (*AddInWatchListResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -66,6 +110,18 @@ func (UnimplementedUserServiceServer) Register(context.Context, *RegisterRequest
 }
 func (UnimplementedUserServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedUserServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
+}
+func (UnimplementedUserServiceServer) AddMovieRating(context.Context, *AddMovieRatingRequest) (*AddMovieRatingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddMovieRating not implemented")
+}
+func (UnimplementedUserServiceServer) EditMovieRating(context.Context, *EditMovieRatingRequest) (*EditMovieRatingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EditMovieRating not implemented")
+}
+func (UnimplementedUserServiceServer) AddInWatchList(context.Context, *AddInWatchListRequest) (*AddInWatchListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddInWatchList not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -116,6 +172,78 @@ func _UserService_Login_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/userpb.userService/UpdateUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateUser(ctx, req.(*UpdateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_AddMovieRating_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddMovieRatingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddMovieRating(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/userpb.userService/AddMovieRating",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddMovieRating(ctx, req.(*AddMovieRatingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_EditMovieRating_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EditMovieRatingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).EditMovieRating(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/userpb.userService/EditMovieRating",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).EditMovieRating(ctx, req.(*EditMovieRatingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_AddInWatchList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddInWatchListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddInWatchList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/userpb.userService/AddInWatchList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddInWatchList(ctx, req.(*AddInWatchListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -130,6 +258,22 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Login",
 			Handler:    _UserService_Login_Handler,
+		},
+		{
+			MethodName: "UpdateUser",
+			Handler:    _UserService_UpdateUser_Handler,
+		},
+		{
+			MethodName: "AddMovieRating",
+			Handler:    _UserService_AddMovieRating_Handler,
+		},
+		{
+			MethodName: "EditMovieRating",
+			Handler:    _UserService_EditMovieRating_Handler,
+		},
+		{
+			MethodName: "AddInWatchList",
+			Handler:    _UserService_AddInWatchList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
