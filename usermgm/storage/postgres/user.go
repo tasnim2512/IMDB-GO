@@ -96,3 +96,29 @@ func (s PostgresStorage) DeleteUser(id string) error {
 	}
 	return nil
 }
+
+const getListQuery = `
+	WITH tot AS (select count(*) as total FROM users
+	WHERE
+		deleted_at IS NULL
+		AND (first_name ILIKE '%%' || $1 || '%%' OR last_name ILIKE '%%' || $1 || '%%' OR username ILIKE '%%' || $1 || '%%' OR email ILIKE '%%' || $1 || '%%'))
+	SELECT *, tot.total as total FROM users
+	LEFT JOIN tot ON TRUE
+	WHERE
+		deleted_at IS NULL
+		AND (first_name ILIKE '%%' || $1 || '%%' OR last_name ILIKE '%%' || $1 || '%%' OR username ILIKE '%%' || $1 || '%%' OR email ILIKE '%%' || $1 || '%%')
+		ORDER BY id DESC
+		OFFSET $2
+		LIMIT $3`
+
+func (s PostgresStorage) GetUserList(uf storage.UserFilter) ([]storage.User, error) {
+	var listUser []storage.User
+	if uf.Limit == 0 {
+		uf.Limit = 5
+	}
+	if err := s.DB.Select(&listUser, getListQuery, uf.SearchTerm, uf.Offset, uf.Limit); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return listUser, nil
+}

@@ -15,6 +15,7 @@ type UserStore interface {
 	AddMovieRating(storage.MovieRating) (*storage.MovieRating, error)
 	EditMovieRating(storage.MovieRating) (*storage.MovieRating, error)
 	AddInWatchList(storage.MovieWatched) (*storage.MovieWatched, error)
+	GetUserList(storage.UserFilter) ([]storage.User, error)
 }
 
 type Svc struct {
@@ -78,4 +79,16 @@ func (s Svc) DeleteUser(g string) error {
 		return err
 	}
 	return nil
+}
+
+func (s Svc) GetUserList(u storage.UserFilter) ([]storage.User, error){
+	user, err := s.store.GetUserList(u)
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		log.Println("unable to get list")
+	}
+	return user, nil
 }

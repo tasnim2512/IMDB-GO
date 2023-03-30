@@ -15,6 +15,7 @@ type UserStore interface {
 	AddMovieRating(storage.MovieRating) (*storage.MovieRating, error)
 	EditMovieRating(storage.MovieRating) (*storage.MovieRating, error)
 	AddInWatchList(storage.MovieWatched) ([]*storage.MovieWatched, error)
+	GetUserList(storage.UserFilter) ([]storage.User, error)
 }
 
 type Svc struct {
@@ -118,5 +119,33 @@ func (s *Svc) DeleteUser(ctx context.Context, r *userpb.DeleteUserRequest) (*use
 
 	return &userpb.DeleteUserResponse{
 		Error: "Deleted",
+	}, nil
+}
+
+func (s *Svc) ShowUserList(ctx context.Context, r *userpb.ShowUserListRequest) (*userpb.ShowUserListResponse, error) {
+	userList := storage.UserFilter{
+		SearchTerm: r.GetSearchTerm(),
+		Offset:     int(r.GetOffset()),
+		Limit:      int(r.GetLimit()),
+	}
+	a, err := s.core.GetUserList(userList)
+	if err != nil {
+		return nil, err
+	}
+
+	
+	list := make([]*userpb.User, len(a))
+	for i, ul := range a {
+		list[i] = &userpb.User{
+			ID:        int32(ul.ID),
+			FirstName: ul.FirstName,
+			LastName:  ul.LastName,
+			UserName:  ul.UserName,
+			Email:     ul.Email,
+			IsActive:  ul.IsActive,
+		}
+	}
+	return &userpb.ShowUserListResponse{
+			User: list,
 	}, nil
 }

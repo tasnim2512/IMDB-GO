@@ -9,6 +9,8 @@ type userService interface {
 	AddMovieRating(AddMovieRatingRequest) AddMovieRatingResponse
 	EditMovieRating(EditMovieRatingRequest) EditMovieRatingResponse
 	AddInWatchList(AddInWatchListRequest) AddInWatchListResponse
+
+	ShowUserList(ShowUserListRequest) ShowUserListResponse
 }
 
 type User struct {
@@ -54,7 +56,7 @@ type UpdateUserResponse struct {
 }
 
 type DeleteUser struct {
-	ID   int    `pb:"1"`
+	ID int `pb:"1"`
 }
 type DeleteUserRequest struct {
 	ID int `pb:"1"`
@@ -105,7 +107,7 @@ type EditMovieRatingResponse struct {
 }
 
 type AddInWatchList struct {
-	UserID  int   `pb:"1"`
+	UserID  int `pb:"1"`
 	MovieID int `pb:"2"`
 }
 
@@ -116,4 +118,13 @@ type AddInWatchListRequest struct {
 
 type AddInWatchListResponse struct {
 	AddInWatchList []AddInWatchList `pb:"1"`
+}
+
+type ShowUserListRequest struct {
+	SearchTerm string `pb:"1"`
+	Offset     int    `pb:"2"`
+	Limit      int    `pb:"3"`
+}
+type ShowUserListResponse struct {
+	User []User `pb:"1"`
 }

@@ -12,7 +12,7 @@ var (
 	NotFound = errors.New("not found")
 )
 
-type StudentFilter struct {
+type UserFilter struct {
 	SearchTerm string
 	Offset     int
 	Limit      int
@@ -30,6 +30,7 @@ type User struct {
 	CreatedAt time.Time    `db:"created_at"`
 	UpdatedAt time.Time    `db:"updated_at"`
 	DeletedAt sql.NullTime `db:"deleted_at"`
+	Total     int          `db:"total"`
 }
 
 type Login struct {
@@ -72,10 +73,10 @@ type MovieRating struct {
 }
 type MovieWatched struct {
 	ID        int       `form:"-" db:"id"`
-	MovieID   int32   `db:"movie_id"`
+	MovieID   int32     `db:"movie_id"`
 	UserID    int       `db:"user_id"`
 	CreatedAt time.Time `db:"created_at"`
-	MovieIDs   []int32   
+	MovieIDs  []int32
 }
 
 func (s User) Validate() error {

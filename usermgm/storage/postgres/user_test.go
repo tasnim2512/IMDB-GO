@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"practice/IMDB/usermgm/storage"
+	"sort"
 	"strconv"
 	"testing"
 
@@ -37,7 +38,7 @@ func TestCreateUser(t *testing.T) {
 				LastName:  "last",
 				Email:     "test@example.com",
 				UserName:  "test",
-				IsActive:    true,
+				IsActive:  true,
 			},
 		},
 		{
@@ -73,7 +74,7 @@ func TestCreateUser(t *testing.T) {
 			}
 
 			opts := cmp.Options{
-				cmpopts.IgnoreFields(storage.User{}, "ID", "Password", "Role","IsAdmin","CreatedAt","UpdatedAt", "DeletedAt",),
+				cmpopts.IgnoreFields(storage.User{}, "ID", "Password", "Role", "IsAdmin", "CreatedAt", "UpdatedAt", "DeletedAt"),
 			}
 
 			if !cmp.Equal(got, tt.want, opts...) {
@@ -82,7 +83,6 @@ func TestCreateUser(t *testing.T) {
 		})
 	}
 }
-
 
 func TestUpdateUser(t *testing.T) {
 	s, tr := NewTestStorage(getDBConnectionString(), getMigrationDir())
@@ -116,7 +116,7 @@ func TestUpdateUser(t *testing.T) {
 				LastName:  "Nim",
 				Email:     "tasnim@yahoo.com",
 				UserName:  "prapty",
-				IsActive:   false,
+				IsActive:  false,
 			},
 		},
 		{
@@ -126,9 +126,9 @@ func TestUpdateUser(t *testing.T) {
 				LastName:  "Nim",
 				Email:     "tasnim@hhhh.com",
 				UserName:  "prapty",
-				IsActive:   false,
+				IsActive:  false,
 			},
-			want: nil,
+			want:    nil,
 			wantErr: true,
 		},
 	}
@@ -150,7 +150,7 @@ func TestUpdateUser(t *testing.T) {
 			}
 
 			opts := cmp.Options{
-				cmpopts.IgnoreFields(storage.User{}, "ID", "Password", "Role","IsAdmin","CreatedAt","UpdatedAt", "DeletedAt",),
+				cmpopts.IgnoreFields(storage.User{}, "ID", "Password", "Role", "IsAdmin", "CreatedAt", "UpdatedAt", "DeletedAt"),
 			}
 
 			if !cmp.Equal(got, tt.want, opts...) {
@@ -208,3 +208,98 @@ func TestDeleteUser(t *testing.T) {
 	}
 }
 
+func TestListUser(t *testing.T) {
+	s, tr := NewTestStorage(getDBConnectionString(), getMigrationDir())
+	t.Parallel()
+
+	t.Cleanup(func() {
+		tr()
+	})
+
+	users := []storage.User{
+		{
+			FirstName: "jabbar",
+			LastName:  "khan",
+			Email:     "jabbar@example.com",
+			UserName:  "jabbar",
+			Password:  "12345678",
+		},
+		{
+			FirstName: "ratul",
+			LastName:  "khan",
+			Email:     "ratul@example.com",
+			UserName:  "ratul",
+			Password:  "12345678",
+		},
+		{
+			FirstName: "pranto",
+			LastName:  "khan",
+			Email:     "pranto@example.com",
+			UserName:  "pranto",
+			Password:  "12345678",
+		},
+	}
+
+	for _, user := range users {
+		_, err := s.UserRegistration(user)
+		if err != nil {
+			t.Fatalf("unable to create user for list user testing %v", err)
+		}
+	}
+
+	tests := []struct {
+		name    string
+		in      storage.UserFilter
+		want    []storage.User
+		wantErr bool
+	}{
+		{
+			name: "LIST_ALL_USER_SUCCESS",
+			in:   storage.UserFilter{},
+			want: []storage.User{
+				{
+					FirstName: "jabbar",
+					LastName:  "khan",
+					Email:     "jabbar@example.com",
+					UserName:  "jabbar",
+					IsActive:  true,
+				},
+				{
+					FirstName: "ratul",
+					LastName:  "khan",
+					Email:     "ratul@example.com",
+					UserName:  "ratul",
+					IsActive:  true,
+				},
+				{
+					FirstName: "pranto",
+					LastName:  "khan",
+					Email:     "pranto@example.com",
+					UserName:  "pranto",
+					IsActive:  true,
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := s.GetUserList(tt.in)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("PostgresStorage.ListUser() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			opts := cmp.Options{
+				cmpopts.IgnoreFields(storage.User{}, "ID", "Password", "Role", "IsAdmin", "CreatedAt", "UpdatedAt", "DeletedAt", "Total"),
+			}
+			sort.SliceStable(got, func(i, j int) bool {
+				return got[i].ID < got[j].ID
+			})
+
+			if !cmp.Equal(got, tt.want, opts...) {
+				t.Errorf("PostgresStorage.ListUser() diff = %v", cmp.Diff(got, tt.want, opts...))
+			}
+		})
+	}
+}
