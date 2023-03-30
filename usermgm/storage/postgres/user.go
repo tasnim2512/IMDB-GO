@@ -75,3 +75,24 @@ func (s PostgresStorage) UpdateUser(u storage.User) (*storage.User, error) {
 	}
 	return &u, nil
 }
+
+const deleteUserQuery = `
+UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1 AND deleted_at IS NULL 
+RETURNING id;
+	`
+
+func (s PostgresStorage) DeleteUser(id string) error {
+	res, err := s.DB.Exec(deleteUserQuery, id)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	row, err := res.RowsAffected()
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	if row >= 0 {
+		fmt.Printf("unable to delete genre")
+	}
+	return nil
+}

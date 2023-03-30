@@ -39,7 +39,6 @@ func (s *Svc) EditMovie(ctx context.Context, r *adminpb.EditMovieRequest) (*admi
 		StoryLine: r.GetStoryLine(),
 		Genre:     r.Genres,
 	}
-	// log.Println("request", movie)
 	if err := movie.Validate(); err != nil {
 		return nil, err
 	}
@@ -53,7 +52,7 @@ func (s *Svc) EditMovie(ctx context.Context, r *adminpb.EditMovieRequest) (*admi
 			ID:        int32(am.ID),
 			Name:      am.Name,
 			StoryLine: am.StoryLine,
-			Genres:    am.Genre,
+			Genres: am.Genre,
 		},
 	}, nil
 

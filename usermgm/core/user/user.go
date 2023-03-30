@@ -11,6 +11,7 @@ type UserStore interface {
 	UserRegistration(storage.User) (*storage.User, error)
 	GetUserByUsername(string) (*storage.User, error)
 	UpdateUser(storage.User) (*storage.User, error)
+	DeleteUser(string) error
 	AddMovieRating(storage.MovieRating) (*storage.MovieRating, error)
 	EditMovieRating(storage.MovieRating) (*storage.MovieRating, error)
 	AddInWatchList(storage.MovieWatched) (*storage.MovieWatched, error)
@@ -69,4 +70,12 @@ func (s Svc) UpdateUser(a storage.User) (*storage.User, error) {
 		log.Println("unable to register")
 	}
 	return user, nil
+}
+
+func (s Svc) DeleteUser(g string) error {
+	err := s.store.DeleteUser(g)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -4,11 +4,13 @@ import (
 	"context"
 	userpb "practice/IMDB/gunk/v1/user"
 	"practice/IMDB/usermgm/storage"
+	"strconv"
 )
 
 type UserStore interface {
 	Register(storage.User) (*storage.User, error)
 	UpdateUser(storage.User) (*storage.User, error)
+	DeleteUser(string) error
 	Login(storage.Login) (*storage.User, error)
 	AddMovieRating(storage.MovieRating) (*storage.MovieRating, error)
 	EditMovieRating(storage.MovieRating) (*storage.MovieRating, error)
@@ -85,7 +87,7 @@ func (s *Svc) Login(ctx context.Context, r *userpb.LoginRequest) (*userpb.LoginR
 
 func (s *Svc) UpdateUser(ctx context.Context, r *userpb.UpdateUserRequest) (*userpb.UpdateUserResponse, error) {
 	user := storage.User{
-		ID: int(r.GetID()),
+		ID:        int(r.GetID()),
 		FirstName: r.GetFirstName(),
 		LastName:  r.GetLastName(),
 		Role:      r.GetRole(),
@@ -104,4 +106,17 @@ func (s *Svc) UpdateUser(ctx context.Context, r *userpb.UpdateUserRequest) (*use
 		},
 	}, nil
 
+}
+
+func (s *Svc) DeleteUser(ctx context.Context, r *userpb.DeleteUserRequest) (*userpb.DeleteUserResponse, error) {
+	genre := storage.Genre{
+		ID: int(r.GetID()),
+	}
+
+	gID := strconv.Itoa(genre.ID)
+	_ = s.core.DeleteUser(gID)
+
+	return &userpb.DeleteUserResponse{
+		Error: "Deleted",
+	}, nil
 }

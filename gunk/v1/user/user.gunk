@@ -4,6 +4,7 @@ type userService interface {
 	Register(RegisterRequest) RegisterResponse
 	Login(LoginRequest) LoginResponse
 	UpdateUser(UpdateUserRequest) UpdateUserResponse
+	DeleteUser(DeleteUserRequest) DeleteUserResponse
 
 	AddMovieRating(AddMovieRatingRequest) AddMovieRatingResponse
 	EditMovieRating(EditMovieRatingRequest) EditMovieRatingResponse
@@ -50,6 +51,16 @@ type UpdateUserRequest struct {
 
 type UpdateUserResponse struct {
 	UpdateUser UpdateUser `pb:"1"`
+}
+
+type DeleteUser struct {
+	ID   int    `pb:"1"`
+}
+type DeleteUserRequest struct {
+	ID int `pb:"1"`
+}
+type DeleteUserResponse struct {
+	Error string `pb:"1"`
 }
 
 type LoginRequest struct {

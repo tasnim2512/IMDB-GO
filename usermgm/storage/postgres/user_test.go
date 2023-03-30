@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"practice/IMDB/usermgm/storage"
+	"strconv"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -159,4 +160,51 @@ func TestUpdateUser(t *testing.T) {
 	}
 }
 
+func TestDeleteUser(t *testing.T) {
+	s, tr := NewTestStorage(getDBConnectionString(), getMigrationDir())
+	t.Parallel()
+
+	t.Cleanup(func() {
+		tr()
+	})
+
+	newUser := storage.User{
+		FirstName: "tasnim",
+		LastName:  "hossain",
+		Email:     "tasnimgmail.com",
+		UserName:  "prapty",
+		Password:  "12345678",
+	}
+
+	user, err := s.UserRegistration(newUser)
+	if err != nil {
+		t.Fatalf("PostgresStorage.UserRegistration() error = %v", err)
+	}
+	id := strconv.Itoa(user.ID)
+	tests := []struct {
+		name    string
+		in      string
+		wantErr bool
+	}{
+		{
+			name: "DELETE_USER_BY_ID_SUCEESS",
+			in:   id,
+		},
+		// {
+		// 	name:    "DELETE_USER_BY_ID_FAILED",
+		// 	in:      id,
+		// 	wantErr: true,
+		// },
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := s.DeleteUser(tt.in)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("PostgresStorage.DeleteUser() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+		})
+	}
+}
 
